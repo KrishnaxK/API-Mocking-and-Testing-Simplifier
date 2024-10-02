@@ -1,24 +1,26 @@
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
 
+// Initialize the mock adapter before each test
+let mock;
+beforeEach(() => {
+  mock = new MockAdapter(axios);
+});
+
+// Reset the mock after each test
+afterEach(() => {
+  mock.reset();
+});
+
 describe('API Mocking Tests', () => {
-  let mock;
-
-  beforeEach(() => {
-    mock = new MockAdapter(axios);
-  });
-
-  afterEach(() => {
-    mock.reset();
-  });
-
-  // GET request tests
   test('should mock GET request to /api/users', async () => {
     mock.onGet('/api/users').reply(200, {
       users: [{ id: 1, name: 'Alice' }],
     });
 
     const response = await axios.get('/api/users');
+
+    expect(response.status).toBe(200);
     expect(response.data.users).toEqual([{ id: 1, name: 'Alice' }]);
   });
 
@@ -32,12 +34,12 @@ describe('API Mocking Tests', () => {
     }
   });
 
-  // POST request tests
   test('should mock POST request to /api/users', async () => {
     const newUser = { id: 2, name: 'Bob' };
     mock.onPost('/api/users').reply(201, newUser);
 
     const response = await axios.post('/api/users', newUser);
+
     expect(response.status).toBe(201);
     expect(response.data).toEqual(newUser);
   });
@@ -52,70 +54,74 @@ describe('API Mocking Tests', () => {
     }
   });
 
-  // PUT request tests
   test('should mock PUT request to /api/users/2', async () => {
     const updatedUser = { id: 2, name: 'Bob Updated' };
     mock.onPut('/api/users/2').reply(200, updatedUser);
 
     const response = await axios.put('/api/users/2', updatedUser);
+
     expect(response.status).toBe(200);
     expect(response.data).toEqual(updatedUser);
   });
 
-  // DELETE request tests
   test('should mock DELETE request to /api/users/2', async () => {
     mock.onDelete('/api/users/2').reply(204);
 
     const response = await axios.delete('/api/users/2');
+
     expect(response.status).toBe(204);
   });
 
-  // Multiple responses for the same endpoint
   test('should mock multiple responses for GET request to /api/users', async () => {
-    mock.onGet('/api/users').replyOnce(200, {
-      users: [{ id: 1, name: 'Alice' }],
-    });
+    const users = [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }];
+    mock.onGet('/api/users').replyOnce(200, users);
 
-    let response = await axios.get('/api/users');
-    expect(response.data.users).toEqual([{ id: 1, name: 'Alice' }]);
+    const response1 = await axios.get('/api/users');
+    expect(response1.data).toEqual(users);
 
-    mock.onGet('/api/users').reply(200, {
-      users: [{ id: 2, name: 'Bob' }],
-    });
+    // You can set up different responses for the same endpoint
+    const newUsers = [{ id: 3, name: 'Charlie' }];
+    mock.onGet('/api/users').replyOnce(200, newUsers);
 
-    response = await axios.get('/api/users');
-    expect(response.data.users).toEqual([{ id: 2, name: 'Bob' }]);
+    const response2 = await axios.get('/api/users');
+    expect(response2.data).toEqual(newUsers);
   });
 
-  // Test custom headers
   test('should handle custom headers in GET request', async () => {
-    mock.onGet('/api/users', {
-      headers: {
-        Authorization: 'Bearer token',
-        // Include any other headers that Axios might add
-        'Accept': 'application/json, text/plain, */*',
-        'User-Agent': 'Axios/0.27.2'
+    // Set up the mock without specifying headers in the onGet call
+    mock.onGet('/api/users').reply((config) => {
+      // Check if the Authorization header is set correctly
+      if (config.headers.Authorization === 'Bearer token') {
+        return [200, { users: [{ id: 1, name: 'Alice' }] }];
+      } else {
+        return [401]; // Return unauthorized if the header doesn't match
       }
-    }).reply(200, {
-      users: [{ id: 1, name: 'Alice' }],
     });
-  
+
+    // Send the request with custom headers
     const response = await axios.get('/api/users', {
       headers: {
         Authorization: 'Bearer token',
-        // Include any other headers that you expect
-        'Accept': 'application/json, text/plain, */*',
-        'User-Agent': 'Axios/0.27.2'
       }
     });
 
-  // Test query parameters
+    // Assert the response
+    expect(response.status).toBe(200);
+    expect(response.data.users).toEqual([{ id: 1, name: 'Alice' }]);
+  });
+
   test('should handle query parameters in GET request', async () => {
-    mock.onGet('/api/users', { params: { active: true } }).reply(200, {
-      users: [{ id: 1, name: 'Alice', active: true }],
+    mock.onGet('/api/users', { params: { page: 2 } }).reply(200, {
+      users: [{ id: 1, name: 'Alice' }],
+      page: 2
     });
 
-    const response = await axios.get('/api/users', { params: { active: true } });
-    expect(response.data.users).toEqual([{ id: 1, name: 'Alice', active: true }]);
+    const response = await axios.get('/api/users', {
+      params: { page: 2 }
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.data.page).toBe(2);
+    expect(response.data.users).toEqual([{ id: 1, name: 'Alice' }]);
   });
 });

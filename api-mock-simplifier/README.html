@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>API Mocking and Testing Simplifier</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="api-mocking-and-testing-simplifier">API Mocking and Testing Simplifier</h1>
+<p>API Mocking and Testing Simplifier is a lightweight and flexible tool for mocking HTTP requests and testing APIs in Node.js projects. This package helps developers create API mocks for testing without hitting real endpoints, enabling faster and more isolated unit and integration tests.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Mock HTTP requests for <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>, etc.</li>
+<li>Supports custom headers and query parameters.</li>
+<li>Simple and flexible syntax for setting up API mocks.</li>
+<li>Easily switch between real and mocked APIs.</li>
+<li>Error handling for common HTTP status codes.</li>
+<li>Perfect for unit and integration testing with Jest.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>To install the package, use npm:</p>
+<pre><code class="language-bash">npm install api-mock-simplifier
+</code></pre>
+<p>Additionally, you need <code>axios</code> and <code>jest</code> for HTTP handling and testing:</p>
+<pre><code class="language-bash">npm install axios jest axios-mock-adapter
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Here’s how to use the API Mocking and Testing Simplifier in your tests:</p>
+<h3 id="setting-up-mocks-for-http-requests">Setting up Mocks for HTTP Requests</h3>
+<p>The package simplifies API mocking by intercepting HTTP requests using <code>axios</code> and <code>axios-mock-adapter</code>.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> axios = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;axios&#x27;</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">MockAdapter</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;axios-mock-adapter&#x27;</span>);
+
+<span class="hljs-comment">// Create a new mock instance</span>
+<span class="hljs-keyword">const</span> mock = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MockAdapter</span>(axios);
+
+<span class="hljs-comment">// Mocking a GET request to /api/users</span>
+mock.<span class="hljs-title function_">onGet</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">200</span>, {
+  <span class="hljs-attr">users</span>: [{ <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Alice&#x27;</span> }],
+});
+
+<span class="hljs-comment">// Making a GET request using axios</span>
+axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(response.<span class="hljs-property">data</span>.<span class="hljs-property">users</span>); <span class="hljs-comment">// [{ id: 1, name: &#x27;Alice&#x27; }]</span>
+});
+</code></pre>
+<h3 id="example-jest-unit-test">Example: Jest Unit Test</h3>
+<p>You can use this package with Jest to mock APIs and perform tests.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> axios = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;axios&#x27;</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">MockAdapter</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;axios-mock-adapter&#x27;</span>);
+
+<span class="hljs-title function_">describe</span>(<span class="hljs-string">&#x27;API Mocking Tests&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">let</span> mock;
+
+  <span class="hljs-title function_">beforeEach</span>(<span class="hljs-function">() =&gt;</span> {
+    mock = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MockAdapter</span>(axios);
+  });
+
+  <span class="hljs-title function_">afterEach</span>(<span class="hljs-function">() =&gt;</span> {
+    mock.<span class="hljs-title function_">reset</span>();
+  });
+
+  <span class="hljs-title function_">test</span>(<span class="hljs-string">&#x27;should mock GET request to /api/users&#x27;</span>, <span class="hljs-keyword">async</span> () =&gt; {
+    mock.<span class="hljs-title function_">onGet</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">200</span>, { <span class="hljs-attr">users</span>: [{ <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Alice&#x27;</span> }] });
+
+    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>);
+    <span class="hljs-title function_">expect</span>(response.<span class="hljs-property">data</span>.<span class="hljs-property">users</span>).<span class="hljs-title function_">toEqual</span>([{ <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Alice&#x27;</span> }]);
+  });
+
+  <span class="hljs-title function_">test</span>(<span class="hljs-string">&#x27;should mock POST request to /api/users&#x27;</span>, <span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">const</span> newUser = { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Bob&#x27;</span> };
+    mock.<span class="hljs-title function_">onPost</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">201</span>, newUser);
+
+    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>, newUser);
+    <span class="hljs-title function_">expect</span>(response.<span class="hljs-property">status</span>).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">201</span>);
+    <span class="hljs-title function_">expect</span>(response.<span class="hljs-property">data</span>).<span class="hljs-title function_">toEqual</span>(newUser);
+  });
+});
+</code></pre>
+<h3 id="mocking-different-http-methods">Mocking Different HTTP Methods</h3>
+<p>You can mock various HTTP methods like <code>POST</code>, <code>PUT</code>, and <code>DELETE</code>.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// Mock POST request</span>
+mock.<span class="hljs-title function_">onPost</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">201</span>, { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Bob&#x27;</span> });
+
+<span class="hljs-comment">// Mock PUT request</span>
+mock.<span class="hljs-title function_">onPut</span>(<span class="hljs-string">&#x27;/api/users/2&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">200</span>, { <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Bob Updated&#x27;</span> });
+
+<span class="hljs-comment">// Mock DELETE request</span>
+mock.<span class="hljs-title function_">onDelete</span>(<span class="hljs-string">&#x27;/api/users/2&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">204</span>);
+</code></pre>
+<h3 id="handling-errors">Handling Errors</h3>
+<p>You can easily mock error responses, such as 404 or 500 status codes.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// Mock 404 error for GET request</span>
+mock.<span class="hljs-title function_">onGet</span>(<span class="hljs-string">&#x27;/api/users/999&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">404</span>);
+
+<span class="hljs-comment">// Mock 500 error for POST request</span>
+mock.<span class="hljs-title function_">onPost</span>(<span class="hljs-string">&#x27;/api/users&#x27;</span>).<span class="hljs-title function_">reply</span>(<span class="hljs-number">500</span>);
+</code></pre>
+<h3 id="switching-between-mocked-and-real-apis">Switching Between Mocked and Real APIs</h3>
+<p>If you want to test using real APIs and switch back to mock APIs when necessary, you can reset or disable the mocks:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// Disable all mocks</span>
+mock.<span class="hljs-title function_">restore</span>();
+</code></pre>
+<h2 id="file-structure">File Structure</h2>
+<p>Here’s the recommended file structure for organizing your project:</p>
+<pre><code>api-mock-simplifier/
+│
+├── src/
+│   ├── interceptors/
+│   │   ├── axiosInterceptor.js     # Axios interceptor for API requests
+│   │   └── fetchInterceptor.js     # Fetch interceptor for API requests
+│   ├── mocking/
+│   │   ├── schemaMocker.js         # Schema-based mocking for API responses
+│   │   └── mockEngine.js           # Core engine for mocking
+│   └── index.js                    # Main entry point for setting up mocking
+│
+├── tests/
+│   └── mockAPITest.spec.js         # Jest test cases for mocking APIs
+│
+├── package.json                    # NPM configuration file
+└── README.md                       # Documentation
+</code></pre>
+<h2 id="contributions">Contributions</h2>
+<p>Contributions are welcome! Feel free to open issues or submit pull requests if you have suggestions, improvements, or bug fixes.</p>
+<h3 id="to-contribute">To contribute:</h3>
+<ol>
+<li>Fork the repo.</li>
+<li>Create a new branch (<code>git checkout -b feature/my-feature</code>).</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>).</li>
+<li>Push to the branch (<code>git push origin feature/my-feature</code>).</li>
+<li>Open a pull request.</li>
+</ol>
+<h2 id="license">License</h2>
+<p>This project is licensed under the MIT License. See the <code>LICENSE</code> file for details.</p>
+<h3 id="key-sections-covered">Key Sections Covered:</h3>
+<ol>
+<li><strong>Features</strong>: Briefly describes the key capabilities of your package.</li>
+<li><strong>Installation</strong>: Explains how to install the package along with its dependencies.</li>
+<li><strong>Usage</strong>: Shows how to set up API mocks with <code>axios</code> and <code>axios-mock-adapter</code>.</li>
+<li><strong>Examples</strong>: Detailed examples for different HTTP methods and handling errors.</li>
+<li><strong>File Structure</strong>: Describes how the package is organized.</li>
+<li><strong>Contributions</strong>: Instructions for contributing to the project.</li>
+</ol>
+<p>Feel free to adapt the content as per your project-specific needs!</p>
+
+            
+            
+        </body>
+        </html>
