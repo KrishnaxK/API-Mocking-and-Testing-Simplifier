@@ -2,6 +2,19 @@
   "name": "api-mock-simplifier",
   "version": "1.0.1",
   "main": "src/index.js",
+  "keywords": [
+    "api",
+    "mocking",
+    "testing",
+    "axios",
+    "jest",
+    "fetch",
+    "mocking-library",
+    "mock-api",
+    "unit-tests"
+  ],
+  "author": "Krishna",
+  "license": "MIT",
   "scripts": {
     "test": "jest",
     "start": "node examples/nodeServerExample.js"
