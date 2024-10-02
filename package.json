@@ -1,0 +1,22 @@
+{
+  "name": "api-mock-simplifier",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node examples/nodeServerExample.js"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "faker": "^6.6.6"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "axios-mock-adapter": "^2.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
